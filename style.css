@@ -15,6 +15,7 @@ body {
 #graphic {
   background-color: #263238;
   min-height: 300px;
+  max-width: 100%;
 }
 
 #top-bar {

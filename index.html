@@ -69,6 +69,7 @@ function updateClock() {
   var repeater;
   var cursorX;
   var cursorY;
+  var maxContentWidth = 600;
 
   var graphic = document.getElementById("graphic");
   var context = graphic.getContext("2d");
@@ -76,13 +77,15 @@ function updateClock() {
 
   var content = document.getElementById("content");
   var contentStyle = content.currentStyle || window.getComputedStyle(content);
+  var graphicStyle = graphic.currentStyle || window.getComputedStyle(graphic);
 
   graphic.onmouseover = startRepeater;
   graphic.ontouchenter = startRepeater;
   graphic.onmouseout = endRepeater;
   graphic.ontouchleave = endRepeater;
   document.onmousemove = function(e) {
-    cursorX = (e.pageX - contentStyle.marginLeft.slice(0, -2) - contentStyle.paddingLeft.slice(0, -2)) / 2; // Fragile
+    cursorX = (e.pageX - contentStyle.marginLeft.slice(0, -2) - contentStyle.paddingLeft.slice(0, -2)) / ((2/maxContentWidth) * graphicStyle.width.slice(0, -2)); // Fragile
+    console.log(cursorX);
     cursorY = e.pageY;
   }
 
