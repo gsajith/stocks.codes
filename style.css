@@ -1,0 +1,54 @@
+body {
+    background-color: #455A64;
+    text-align: center;
+    font-family: 'Roboto Slab', sans-serif;
+    color: #90A4AE;
+}
+
+#content {
+  max-width:600px;
+  margin:auto;
+  padding-left:20px;
+  padding-right:20px;
+}
+
+#top-bar {
+  background-color: #263238;
+  height: 60px;
+  line-height: 60px;
+  width: auto;
+  text-align: left;
+  padding-left: 20px;
+  margin:0px;
+}
+
+#top-bar h2 {
+  margin:0px;
+}
+
+#current-time {
+  display: inline-block;
+  color: #FF4081;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+}
+
+h2 {
+  color: #FF4081;
+}
+
+a {
+  text-decoration: none;
+  color: #FF80AB;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  text-align:center;
+  font-size: 12px;
+}
