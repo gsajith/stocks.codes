@@ -31,7 +31,7 @@
 </head>
 <body>
   <div id="top-bar" class="card">
-    <h2>Stock Codes</h2>
+    <h2>Stock Market Hours</h2>
   </div>
 
   <div id="content">
@@ -60,7 +60,7 @@
   function updateClock() {
     var date = new Date();
     document.getElementById("current-time").innerHTML = "&nbsp;" + getCurrentTime(date) + " " + getCurrentTimeZone(date);
-    document.getElementById("market-status").innerHTML = getCurrentMarketStatus(date);
+    document.getElementById("market-status").innerHTML = getCurrentMarketStatus(convertToESTDate(date), true);
     setTimeout(updateClock, 1000);
   }
 
@@ -133,8 +133,15 @@ function getOverlayTime(fraction) {
   var hours = parseInt(fraction * 24);
   var minutes = parseInt((fraction * 24 % 1) * 60);
   var seconds = parseInt(((fraction * 24 % 1) * 60 % 1) * 60);
-  console.log(hours + " " + minutes + " " +  seconds);
-  return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2) + " EST";
+  var currentDate = new Date();
+  currentDate.setYear(2017);
+  currentDate.setMonth(10);
+  currentDate.setDate(24);
+  currentDate = convertToESTDate(currentDate);
+  currentDate.setHours(hours);
+  currentDate.setMinutes(minutes);
+  currentDate.setSeconds(seconds);
+  return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2)  + " EST - " + getCurrentMarketStatus(currentDate, false);
 }
 
 function getCurrentTime(date) {
@@ -145,33 +152,47 @@ function getCurrentTimeZone(date) {
   return date.toString().match(/\(([A-Za-z\s].*)\)/)[1];
 }
 
-function getCurrentMarketStatus(date) {
-  // EST offset (GMT-4)
+function convertToESTDate(date) {
+    // EST offset (GMT-4)
   offset = -4;
   utc = date.getTime() + (date.getTimezoneOffset() * 60000);
   newDate = new Date(utc + (3600000 * offset));
-  
-  if (newDate.getDay() == 2 || newDate.getDay() == 6) {
-    setDisclaimerVisibility(false);
+  return newDate;
+}
+
+function getCurrentMarketStatus(date, setVis) {
+  if (newDate.getDay() == 0 || newDate.getDay() == 6) {
+    if (setVis) {
+      setDisclaimerVisibility(false);
+    }
+    console.log("here");
     return "CLOSED";
   }
 
   if (newDate.getHours() == 7 || newDate.getHours() == 8 || (newDate.getHours() == 9 && newDate.getMinutes() <= 30)) {
-    setDisclaimerVisibility(true);
+    if (setVis) {
+      setDisclaimerVisibility(true);
+    }
     return "PRE-OPENING";
   }
 
   if (newDate.getHours() >= 9 && newDate.getHours() < 16) {
-    setDisclaimerVisibility(true);
+    if (setVis) {
+      setDisclaimerVisibility(true);
+    }
     return "OPEN";
   }
 
   if (newDate.getHours() >= 16 && newDate.getHours() < 20) {
-    setDisclaimerVisibility(true);
+    if (setVis) {
+      setDisclaimerVisibility(true);
+    }
     return "AFTER-HOURS TRADING";
   }
 
-  setDisclaimerVisibility(false);
+  if (setVis) {
+      setDisclaimerVisibility(false);
+  }
   return "CLOSED";
 }
 
