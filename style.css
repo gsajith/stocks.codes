@@ -1,8 +1,8 @@
 body {
-    background-color: #455A64;
-    text-align: center;
-    font-family: 'Roboto Slab', sans-serif;
-    color: #90A4AE;
+  background-color: #455A64;
+  text-align: center;
+  font-family: 'Roboto Slab', sans-serif;
+  color: #90A4AE;
 }
 
 #content {
@@ -29,6 +29,7 @@ body {
 #current-time {
   display: inline-block;
   color: #FF4081;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .card {

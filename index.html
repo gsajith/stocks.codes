@@ -1,6 +1,7 @@
 <!doctype html>
 <html amp lang="en">
 <head>
+  <!-- AMP metadata -->
   <meta charset="utf-8">
   <script async src="https://cdn.ampproject.org/v0.js"></script>
   <title>Stock Market Hours</title>
@@ -23,9 +24,10 @@
     });
   </script>
   <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
-  <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
-    <link rel="stylesheet"
-          href="style.css">
+
+  <!-- Our stylesheets and scripts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Slab|Roboto+Mono" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="top-bar" class="card">
@@ -33,22 +35,31 @@
   </div>
 
   <div id="content">
-  <h1>The current time is <div id="current-time">5:30PM EST</div>.</h1>
-  <h2>Stock market hours infographic goes here. </h2><br><br>
-  Get the <a href="http://share.robinhood.com/gauthas3">Robinhood</a> app and start trading today! <a href="http://share.robinhood.com/gauthas3">Sign up now</a> to get a <b>FREE stock worth up to $200</b> when you join!
+    <h1>The current time is <div id="current-time">5:30PM EST</div>.</h1>
+    <h2>Stock market hours infographic goes here. </h2><br><br>
+    Get the <a href="http://share.robinhood.com/gauthas3">Robinhood</a> app and start trading today! <a href="http://share.robinhood.com/gauthas3">Sign up now</a> to get a <b>FREE stock worth up to $200</b> when you join!
   </div>
 
-
-<footer>
-© 2017 - <a href="http://gsajith.com">Gautham Sajith</a>
-</footer>
+  <footer>
+    © 2017 - <a href="http://gsajith.com">Gautham Sajith</a>
+  </footer>
 </body>
 
 <script>
+function updateClock() {
+  var date = new Date();
+  document.getElementById("current-time").innerHTML = getCurrentTime(date) + " " + getCurrentTimeZone(date);
+  setTimeout(updateClock, 1000);
+}
 
+updateClock();
+
+function getCurrentTime(date) {
+  return date.toString().split(" ")[4];
+}
+
+function getCurrentTimeZone(date) {
+  return date.toString().match(/\(([A-Za-z\s].*)\)/)[1];
+}
 </script>
-
-<style>
-
-</style>
 </html>
