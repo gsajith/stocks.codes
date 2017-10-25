@@ -36,13 +36,22 @@
 
   <div id="content">
     <h1>The current time is<div id="current-time">5:30PM EST</div>.</h1>
-    <h2>Stock market hours infographic goes here. </h2><br><br>
+    <h1>The US market is <div id="market-status">CLOSED</div><span class="disclaimer">*</span>.</h1>
+    <div class="small-text disclaimer">
+    * Unless it is one of these holidays: New Years Day, MLK Day, Washington's Birthday, Good Friday, Memorial Day, Independence Day, Labor Day, Thanksgiving, Christmas.
+    </div>
+
+    <canvas id="graphic" class="card">
+    Your browser does not support the HTML5 canvas tag.
+    </canvas>
+
+    <br><br><br><br><br><br><br><br>
     Get the <a href="http://share.robinhood.com/gauthas3" target="_blank">Robinhood</a> app and start trading today! <a href="http://share.robinhood.com/gauthas3" target="_blank">Sign up now</a> to get a <b>FREE stock worth up to $200</b> when you join!
   </div>
 
   <br><br><br><br><br><br><br><br><br>
 
-  <footer>
+  <footer class="small-text">
     © 2017 - <a href="http://gsajith.com" target="_blank">Gautham Sajith</a>
   </footer>
 </body>
@@ -51,10 +60,47 @@
 function updateClock() {
   var date = new Date();
   document.getElementById("current-time").innerHTML = "&nbsp;" + getCurrentTime(date) + " " + getCurrentTimeZone(date);
+  document.getElementById("market-status").innerHTML = getCurrentMarketStatus(date);
   setTimeout(updateClock, 1000);
 }
 
-updateClock();
+  updateClock();
+
+  var repeater;
+  var cursorX;
+  var cursorY;
+
+  var graphic = document.getElementById("graphic");
+  var context = graphic.getContext("2d");
+  context.strokeStyle = "#90A4AE"; // Fragile
+
+  var content = document.getElementById("content");
+  var contentStyle = content.currentStyle || window.getComputedStyle(content);
+
+  graphic.onmouseover = startRepeater;
+  graphic.ontouchenter = startRepeater;
+  graphic.onmouseout = endRepeater;
+  graphic.ontouchleave = endRepeater;
+  document.onmousemove = function(e) {
+    cursorX = (e.pageX - contentStyle.marginLeft.slice(0, -2) - contentStyle.paddingLeft.slice(0, -2)) / 2; // Fragile
+    cursorY = e.pageY;
+  }
+
+function startRepeater() {
+  repeater = setInterval(drawVerticalLine, 30);
+}
+
+function endRepeater() {
+  clearInterval(repeater);
+}
+
+function drawVerticalLine() {
+  context.clearRect(0, 0, graphic.width, graphic.height);
+  context.beginPath();
+  context.moveTo(cursorX, 0);
+  context.lineTo(cursorX, graphic.height);
+  context.stroke();
+}
 
 function getCurrentTime(date) {
   return date.toString().split(" ")[4];
@@ -62,6 +108,47 @@ function getCurrentTime(date) {
 
 function getCurrentTimeZone(date) {
   return date.toString().match(/\(([A-Za-z\s].*)\)/)[1];
+}
+
+function getCurrentMarketStatus(date) {
+  // EST offset (GMT-4)
+  offset = -4;
+  utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+  newDate = new Date(utc + (3600000 * offset));
+  
+  if (newDate.getDay() == 2 || newDate.getDay() == 6) {
+    setDisclaimerVisibility(false);
+    return "CLOSED";
+  }
+
+  if (newDate.getHours() == 7 || newDate.getHours() == 8 || (newDate.getHours() == 9 && newDate.getMinutes() <= 30)) {
+    setDisclaimerVisibility(true);
+    return "PRE-OPENING";
+  }
+
+  if (newDate.getHours() >= 9 && newDate.getHours() < 16) {
+    setDisclaimerVisibility(true);
+    return "OPEN";
+  }
+
+  if (newDate.getHours() >= 16 && newDate.getHours() < 20) {
+    setDisclaimerVisibility(true);
+    return "AFTER-HOURS TRADING";
+  }
+
+  setDisclaimerVisibility(false);
+  return "CLOSED";
+}
+
+// Fragile
+function setDisclaimerVisibility(visible) {
+  if (visible) {
+    document.getElementsByClassName("disclaimer")[0].style.display = "inline";
+    document.getElementsByClassName("disclaimer")[1].style.display = "inline";
+  } else {
+    document.getElementsByClassName("disclaimer")[0].style.display = "none";
+    document.getElementsByClassName("disclaimer")[1].style.display = "none";
+  }
 }
 </script>
 </html>

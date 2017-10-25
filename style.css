@@ -12,6 +12,11 @@ body {
   padding-right:20px;
 }
 
+#graphic {
+  background-color: #263238;
+  min-height: 300px;
+}
+
 #top-bar {
   background-color: #263238;
   height: 60px;
@@ -26,7 +31,7 @@ body {
   margin:0px;
 }
 
-#current-time {
+#current-time, #market-status {
   display: inline-block;
   color: #FF4081;
   font-family: 'Roboto Mono', monospace;
@@ -49,7 +54,7 @@ a:hover {
   text-decoration: underline;
 }
 
-footer {
+.small-text {
   text-align:center;
-  font-size: 12px;
+  font-size: 11px;
 }
