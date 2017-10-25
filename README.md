@@ -1,5 +1,9 @@
 Get the [Robinhood](http://share.robinhood.com/gauthas3) app and start trading today! [Sign up now](http://share.robinhood.com/gauthas3) to get a FREE stock worth up to $200 when you join!
 
+## Welcome to GitHub Pages
+
+You can use the [editor on GitHub](https://github.com/gsajith/stocks.codes/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
 ### Markdown
