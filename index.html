@@ -38,18 +38,18 @@
     <h1>The current time is<div id="current-time">5:30PM EST</div>.</h1>
     <h1>The US market is <div id="market-status">CLOSED</div><span class="disclaimer">*</span>.</h1>
     <div class="small-text disclaimer">
-    * Unless it is one of these holidays: New Years Day, MLK Day, Washington's Birthday, Good Friday, Memorial Day, Independence Day, Labor Day, Thanksgiving, Christmas.
+      * Unless it is one of these holidays: New Years Day, MLK Day, Washington's Birthday, Good Friday, Memorial Day, Independence Day, Labor Day, Thanksgiving, Christmas.
     </div>
 
-    <canvas id="graphic" class="card">
-    Your browser does not support the HTML5 canvas tag.
+    <canvas width=600 id="graphic" class="card">
+      Your browser does not support the HTML5 canvas tag.
     </canvas>
 
-    <br><br><br><br><br><br><br><br>
+    <br><br><br><br>
     Get the <a href="http://share.robinhood.com/gauthas3" target="_blank">Robinhood</a> app and start trading today! <a href="http://share.robinhood.com/gauthas3" target="_blank">Sign up now</a> to get a <b>FREE stock worth up to $200</b> when you join!
   </div>
 
-  <br><br><br><br><br><br><br><br><br>
+  <br><br><br><br>
 
   <footer class="small-text">
     © 2017 - <a href="http://gsajith.com" target="_blank">Gautham Sajith</a>
@@ -57,12 +57,12 @@
 </body>
 
 <script>
-function updateClock() {
-  var date = new Date();
-  document.getElementById("current-time").innerHTML = "&nbsp;" + getCurrentTime(date) + " " + getCurrentTimeZone(date);
-  document.getElementById("market-status").innerHTML = getCurrentMarketStatus(date);
-  setTimeout(updateClock, 1000);
-}
+  function updateClock() {
+    var date = new Date();
+    document.getElementById("current-time").innerHTML = "&nbsp;" + getCurrentTime(date) + " " + getCurrentTimeZone(date);
+    document.getElementById("market-status").innerHTML = getCurrentMarketStatus(date);
+    setTimeout(updateClock, 1000);
+  }
 
   updateClock();
 
@@ -73,21 +73,23 @@ function updateClock() {
 
   var graphic = document.getElementById("graphic");
   var context = graphic.getContext("2d");
-  context.strokeStyle = "#90A4AE"; // Fragile
+context.strokeStyle = "#FFFFFF"; // Fragile
+context.font = "14px sans-serif";
 
-  var content = document.getElementById("content");
-  var contentStyle = content.currentStyle || window.getComputedStyle(content);
-  var graphicStyle = graphic.currentStyle || window.getComputedStyle(graphic);
+drawTimes();
 
-  graphic.onmouseover = startRepeater;
-  graphic.ontouchenter = startRepeater;
-  graphic.onmouseout = endRepeater;
-  graphic.ontouchleave = endRepeater;
-  document.onmousemove = function(e) {
-    cursorX = (e.pageX - contentStyle.marginLeft.slice(0, -2) - contentStyle.paddingLeft.slice(0, -2)) / ((2/maxContentWidth) * graphicStyle.width.slice(0, -2)); // Fragile
-    console.log(cursorX);
-    cursorY = e.pageY;
-  }
+var content = document.getElementById("content");
+var contentStyle = content.currentStyle || window.getComputedStyle(content);
+var graphicStyle = graphic.currentStyle || window.getComputedStyle(graphic);
+
+graphic.onmouseover = startRepeater;
+graphic.ontouchenter = startRepeater;
+graphic.onmouseout = endRepeater;
+graphic.ontouchleave = endRepeater;
+document.onmousemove = function(e) {
+  cursorX = (e.pageX - contentStyle.marginLeft.slice(0, -2) - contentStyle.paddingLeft.slice(0, -2)) / (graphicStyle.width.slice(0, -2)/maxContentWidth); // Fragile
+  cursorY = e.pageY;
+}
 
 function startRepeater() {
   repeater = setInterval(drawVerticalLine, 30);
@@ -99,10 +101,40 @@ function endRepeater() {
 
 function drawVerticalLine() {
   context.clearRect(0, 0, graphic.width, graphic.height);
+  drawTimes();
   context.beginPath();
   context.moveTo(cursorX, 0);
   context.lineTo(cursorX, graphic.height);
+  context.strokeStyle = "#FFFFFF"; // Fragile
   context.stroke();
+  context.fillStyle = "#FFFFFF";
+  context.fillText(getOverlayTime(cursorX/graphic.width), cursorX + 10, 75);
+}
+
+function drawTimes() {  
+  for (var i = 0; i < 24; i++) {
+    context.moveTo((graphic.width / 24.0) * i, 0);
+    context.lineTo((graphic.width / 24.0) * i, graphic.height);
+    context.strokeStyle = "#212121"; // Fragile
+    context.stroke();
+  }
+  var barHeight = graphic.height - 40;
+  context.fillStyle = "#90A4AE";
+  context.fillRect((graphic.width / 24.0) * 7, 20, (graphic.width / 24.0) * 2.5, barHeight);
+  context.fillStyle = "#F50057";
+  context.fillRect((graphic.width / 24.0) * 9.5, 20, (graphic.width / 24.0) * 6.5, barHeight);
+  context.fillStyle = "#90A4AE";
+  context.fillRect((graphic.width / 24.0) * 16, 20, (graphic.width / 24.0) * 4, barHeight);
+  context.fillStyle = "#FFFFFF";
+  context.fillText("NYSE Hours", 10, 30);
+}
+
+function getOverlayTime(fraction) {
+  var hours = parseInt(fraction * 24);
+  var minutes = parseInt((fraction * 24 % 1) * 60);
+  var seconds = parseInt(((fraction * 24 % 1) * 60 % 1) * 60);
+  console.log(hours + " " + minutes + " " +  seconds);
+  return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2) + " EST";
 }
 
 function getCurrentTime(date) {
