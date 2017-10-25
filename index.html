@@ -35,10 +35,12 @@
   </div>
 
   <div id="content">
-    <h1>The current time is <div id="current-time">5:30PM EST</div>.</h1>
+    <h1>The current time is<div id="current-time">5:30PM EST</div>.</h1>
     <h2>Stock market hours infographic goes here. </h2><br><br>
     Get the <a href="http://share.robinhood.com/gauthas3" target="_blank">Robinhood</a> app and start trading today! <a href="http://share.robinhood.com/gauthas3" target="_blank">Sign up now</a> to get a <b>FREE stock worth up to $200</b> when you join!
   </div>
+
+  <br><br><br><br><br><br><br><br><br>
 
   <footer>
     © 2017 - <a href="http://gsajith.com" target="_blank">Gautham Sajith</a>
@@ -48,7 +50,7 @@
 <script>
 function updateClock() {
   var date = new Date();
-  document.getElementById("current-time").innerHTML = getCurrentTime(date) + " " + getCurrentTimeZone(date);
+  document.getElementById("current-time").innerHTML = "&nbsp;" + getCurrentTime(date) + " " + getCurrentTimeZone(date);
   setTimeout(updateClock, 1000);
 }
 
