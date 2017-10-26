@@ -77,6 +77,11 @@
   context.font = "14px sans-serif";
 
   drawTimes();
+  var dummyCurrentDate = new Date();
+  dummyCurrentDate.setYear(2017);
+  dummyCurrentDate.setMonth(9);
+  dummyCurrentDate.setDate(24);
+  drawVerticalLineAt(convertToESTDate(dummyCurrentDate));
 
   var content = document.getElementById("content");
   var contentStyle = content.currentStyle || window.getComputedStyle(content);
@@ -97,6 +102,27 @@
 
   function endRepeater() {
     clearInterval(repeater);
+  }
+
+  function drawVerticalLineAt(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var fraction = (hours/24) + (minutes/(60*24)) + (seconds/(60*60*24));
+    console.log(fraction);
+    console.log(hours);
+    console.log(seconds);
+    console.log(minutes);
+    context.clearRect(0, 0, graphic.width, graphic.height);
+    drawTimes();
+    context.beginPath();
+    context.moveTo(graphic.width * fraction, 0);
+    context.lineTo(graphic.width * fraction, graphic.height);
+    context.strokeStyle = "#FFFFFF";
+    context.stroke();
+    context.fillStyle = "#FFFFFF";
+    context.fillText(getOverlayTime(fraction), (graphic.width * fraction) + 10, 75);
+
   }
 
   function drawVerticalLine() {
@@ -133,10 +159,7 @@
     var hours = parseInt(fraction * 24);
     var minutes = parseInt((fraction * 24 % 1) * 60);
     var seconds = parseInt(((fraction * 24 % 1) * 60 % 1) * 60);
-    var currentDate = new Date();
-    currentDate.setYear(2017);
-    currentDate.setMonth(10);
-    currentDate.setDate(24);
+    var currentDate = dummyCurrentDate;
     currentDate = convertToESTDate(currentDate);
     currentDate.setHours(hours);
     currentDate.setMinutes(minutes);
@@ -160,41 +183,41 @@
       return newDate;
     }
 
-    function getCurrentMarketStatus(date, setVis) {
-      if (newDate.getDay() == 0 || newDate.getDay() == 6) {
-        if (setVis) {
-          setDisclaimerVisibility(false);
-        }
-        console.log("here");
-        return "CLOSED";
-      }
-
-      if (newDate.getHours() == 7 || newDate.getHours() == 8 || (newDate.getHours() == 9 && newDate.getMinutes() <= 30)) {
-        if (setVis) {
-          setDisclaimerVisibility(true);
-        }
-        return "PRE-OPENING";
-      }
-
-      if (newDate.getHours() >= 9 && newDate.getHours() < 16) {
-        if (setVis) {
-          setDisclaimerVisibility(true);
-        }
-        return "OPEN";
-      }
-
-      if (newDate.getHours() >= 16 && newDate.getHours() < 20) {
-        if (setVis) {
-          setDisclaimerVisibility(true);
-        }
-        return "AFTER-HOURS TRADING";
-      }
-
+  function getCurrentMarketStatus(date, setVis) {
+    if (newDate.getDay() == 0 || newDate.getDay() == 6) {
       if (setVis) {
         setDisclaimerVisibility(false);
       }
+      console.log("here");
       return "CLOSED";
     }
+
+    if (newDate.getHours() == 7 || newDate.getHours() == 8 || (newDate.getHours() == 9 && newDate.getMinutes() <= 30)) {
+      if (setVis) {
+        setDisclaimerVisibility(true);
+      }
+      return "PRE-OPENING";
+    }
+
+    if (newDate.getHours() >= 9 && newDate.getHours() < 16) {
+      if (setVis) {
+        setDisclaimerVisibility(true);
+      }
+      return "OPEN";
+    }
+
+    if (newDate.getHours() >= 16 && newDate.getHours() < 20) {
+      if (setVis) {
+        setDisclaimerVisibility(true);
+      }
+      return "AFTER-HOURS TRADING";
+    }
+
+    if (setVis) {
+      setDisclaimerVisibility(false);
+    }
+    return "CLOSED";
+  }
 
   // Fragile
   function setDisclaimerVisibility(visible) {
